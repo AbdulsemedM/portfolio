@@ -83,20 +83,20 @@ const FlutterDev = () => {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
   return (
-    <section id="flutter" className="min-h-screen relative bg-primary overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 py-24">
+    <section id="flutter" className="min-h-screen relative bg-primary overflow-x-hidden py-12 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
-          <h2 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 flex items-center gap-3">
             Flutter Development
             <motion.span
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-4xl"
+              className="text-3xl sm:text-4xl"
             >
               💙
             </motion.span>
@@ -109,12 +109,12 @@ const FlutterDev = () => {
         </motion.div>
 
         <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
-          <Tab.List className="flex space-x-2 rounded-xl bg-tertiary p-2 max-w-2xl mb-8">
+          <Tab.List className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:space-x-2 rounded-xl bg-tertiary p-2 max-w-2xl mb-8">
             {tabs.map((tab) => (
               <Tab
                 key={tab.name}
-                className={({ selected }: { selected: boolean }) =>
-                  `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-all duration-200
+                className={({ selected }) =>
+                  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-all duration-200
                   ${
                     selected
                       ? 'bg-secondary text-primary shadow'
@@ -131,13 +131,13 @@ const FlutterDev = () => {
             ))}
           </Tab.List>
 
-          <div className="relative">
-            <Tab.Panels>
+          <div className="relative min-h-[500px] sm:min-h-[400px]">
+            <Tab.Panels className="w-full">
               <AnimatePresence mode="wait">
                 {tabs.map((tab, idx) => (
                   <Tab.Panel
                     key={idx}
-                    className={`rounded-xl bg-tertiary p-8 absolute top-0 left-0 w-full
+                    className={`rounded-xl bg-tertiary p-4 sm:p-8 w-full
                       ${selectedTab === idx ? 'block' : 'hidden'}
                       ring-white/60 ring-offset-2 ring-offset-primary focus:outline-none focus:ring-2`}
                     static
@@ -147,26 +147,26 @@ const FlutterDev = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
-                      className="space-y-8"
+                      className="space-y-6 sm:space-y-8"
                     >
                       <div>
-                        <h3 className="text-3xl font-bold text-white mb-3 flex items-center gap-3">
+                        <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 flex items-center gap-3">
                           {tab.content.title}
-                          <span className="text-3xl">{tab.icon}</span>
+                          <span className="text-2xl sm:text-3xl">{tab.icon}</span>
                         </h3>
-                        <p className="text-[#dfd9ff] text-lg">{tab.content.description}</p>
+                        <p className="text-[#dfd9ff] text-base sm:text-lg">{tab.content.description}</p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                         <div>
-                          <h4 className="text-xl font-semibold text-white mb-4">Key Features</h4>
+                          <h4 className="text-lg sm:text-xl font-semibold text-white mb-4">Key Features</h4>
                           <ul className="space-y-3">
                             {tab.content.features.map((feature, index) => (
                               <motion.li
                                 key={feature}
                                 onHoverStart={() => setHoveredFeature(index)}
                                 onHoverEnd={() => setHoveredFeature(null)}
-                                className="flex items-start space-x-3 text-white"
+                                className="flex items-start space-x-3 text-white text-sm sm:text-base"
                               >
                                 <motion.div
                                   animate={{
@@ -224,12 +224,12 @@ const FlutterDev = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-[400px] md:mt-[300px]"
+          className="mt-12 sm:mt-24"
         >
-          <h3 className="text-2xl font-bold text-white mb-6">Development Flow</h3>
-          <div className="relative flex items-center justify-center py-10">
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-6">Development Flow</h3>
+          <div className="relative py-8 sm:py-10">
             <div className="absolute inset-0 bg-tertiary opacity-50 rounded-lg"></div>
-            <div className="relative grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+            <div className="relative grid grid-cols-3 sm:grid-cols-6 gap-4 items-center px-4">
               {[
                 { text: 'Flutter', icon: '💙' },
                 { text: '→', icon: '' },
@@ -244,9 +244,9 @@ const FlutterDev = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-center p-4 ${
+                  className={`flex items-center justify-center p-2 sm:p-4 ${
                     item.text === '→'
-                      ? 'text-secondary text-2xl'
+                      ? 'text-secondary text-xl sm:text-2xl hidden sm:flex'
                       : 'bg-primary rounded-lg shadow-lg'
                   }`}
                 >
