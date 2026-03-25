@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import profilePic from '../assets/images/profile_pic.jpg';
+import resumePdf from '../assets/file/abdulsemed-mussema-resume.pdf';
 
 const BackgroundCircles = () => {
   return (
@@ -77,7 +78,7 @@ const Hero = () => {
             />
           </p>
 
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex flex-wrap gap-4">
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -94,7 +95,77 @@ const Hero = () => {
             >
               See Projects
             </motion.a>
+            <motion.a
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              href={resumePdf}
+              download="Abdulsemed-Mussema-Resume.pdf"
+              className="group relative overflow-hidden border border-secondary/60 bg-gradient-to-r from-secondary/20 via-secondary/30 to-cyan-400/20 px-8 py-3 rounded-full font-bold text-white transition-all"
+            >
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+              <span className="relative z-10 inline-flex items-center gap-2">
+                <span>Download Resume</span>
+                <span aria-hidden>⬇</span>
+              </span>
+            </motion.a>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-6 w-full max-w-xl rounded-2xl border border-secondary/30 bg-gradient-to-br from-tertiary/90 via-primary/70 to-tertiary/90 p-5 backdrop-blur-md"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-secondary/90">Resume Vault</p>
+                <h3 className="mt-1 text-xl font-bold text-white">Abdulsemed Mussema - Software Engineer</h3>
+                <p className="mt-2 text-sm text-[#dfd9ff]">
+                  One-click PDF download with core experience, projects, and technical stack.
+                </p>
+              </div>
+              <motion.span
+                animate={{ scale: [1, 1.08, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity }}
+                className="rounded-full border border-secondary/40 bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary"
+              >
+                PDF
+              </motion.span>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-xl border border-white/10 bg-primary/40 p-3 text-[#dfd9ff]">
+                <p className="text-white font-semibold">Format</p>
+                <p>Optimized for ATS + recruiters</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-primary/40 p-3 text-[#dfd9ff]">
+                <p className="text-white font-semibold">Delivery</p>
+                <p>Instant local browser download</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <motion.a
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                href={resumePdf}
+                download="Abdulsemed-Mussema-Resume.pdf"
+                className="rounded-full bg-secondary px-5 py-2.5 font-bold text-primary"
+              >
+                Download Resume
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                href={resumePdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-secondary/50 px-5 py-2.5 font-bold text-white hover:bg-secondary/10"
+              >
+                Quick Preview
+              </motion.a>
+            </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
