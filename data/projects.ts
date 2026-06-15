@@ -160,6 +160,21 @@ export const projects: Project[] = [
     ],
   },
   {
+    id: "fastpay",
+    title: "FastPayEt",
+    company: "other",
+    companyLabel: "FastPay LLC",
+    description:
+      "Mobile remittance app for sending money to Ethiopia — users can transfer funds anytime with instant delivery to recipients, clear transaction details before confirming, and a secure end-to-end experience. 50K+ downloads on Google Play.",
+    tags: ["Flutter", "Firebase", "Android", "Fintech"],
+    links: [
+      {
+        label: "Google Play",
+        url: "https://play.google.com/store/apps/details?id=com.fastpay.android",
+      },
+    ],
+  },
+  {
     id: "tina-driver",
     title: "Tina Driver",
     company: "other",
