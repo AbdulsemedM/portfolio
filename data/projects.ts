@@ -160,17 +160,42 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "fastpay",
-    title: "FastPayEt",
+    id: "abaystock",
+    title: "AbayStock",
     company: "other",
-    companyLabel: "FastPay LLC",
+    companyLabel: "AbayStock",
     description:
-      "Mobile remittance app for sending money to Ethiopia — users can transfer funds anytime with instant delivery to recipients, clear transaction details before confirming, and a secure end-to-end experience. 50K+ downloads on Google Play.",
-    tags: ["Flutter", "Firebase", "Android", "Fintech"],
+      "Multi-vendor inventory platform with live SKU visibility across warehouses, role-based access, barcode workflows, and purchase-to-fulfillment stock tracking.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Inventory"],
+    links: [{ label: "Visit Site", url: "https://abbaystock.com/" }],
+  },
+  {
+    id: "hudhud-delivery",
+    title: "Hudhud Delivery",
+    company: "hudhud",
+    companyLabel: "HudHud Corporation PLC",
+    description:
+      "On-demand food and parcel delivery app that connects customers with nearby verified drivers, real-time tracking, and affordable 24/7 service.",
+    tags: ["Flutter", "Firebase", "Maps", "Real-time"],
     links: [
       {
-        label: "Google Play",
-        url: "https://play.google.com/store/apps/details?id=com.fastpay.android",
+        label: "App Store",
+        url: "https://apps.apple.com/us/app/hudhud-delivery/id1588025471",
+      },
+    ],
+  },
+  {
+    id: "hudhud-delivery-driver",
+    title: "Hudhud Delivery Driver",
+    company: "hudhud",
+    companyLabel: "HudHud Corporation PLC",
+    description:
+      "Driver-side companion app for accepting delivery jobs, navigating to customers, and managing food and parcel orders in real time.",
+    tags: ["Flutter", "Firebase", "Maps", "Real-time"],
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/us/app/hudhud-delivery-driver/id1588025482",
       },
     ],
   },
