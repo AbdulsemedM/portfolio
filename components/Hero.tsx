@@ -1,181 +1,145 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { SITE } from "@/lib/constants";
+import { stats } from "@/data/stats";
+import { EASE_OUT_EXPO, RevealLine } from "@/components/ui/FadeIn";
+import { LocalTime } from "@/components/ui/LocalTime";
+import { CountUp } from "@/components/ui/CountUp";
 
-const HEADLINE_WORDS = [
-  { text: "I", highlight: false },
-  { text: "build", highlight: false },
-  { text: "products", highlight: true },
-  { text: "people", highlight: false },
-  { text: "actually", highlight: false },
-  { text: "use.", highlight: true },
-];
-
-const PARTICLE_KEYWORDS = [
-  "Flutter", "React", "Next.js", "Node.js", "Go", "Python",
-  "Docker", "AWS", "PostgreSQL", "TypeScript", "Firebase",
-  "TailwindCSS", "Dart", "MongoDB", "Java",
-];
-
-interface Particle {
-  id: number;
-  text: string;
-  x: number;
-  y: number;
-  size: number;
-  duration: number;
-  delay: number;
-}
-
-function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-}
-
-function ParticleBackground() {
-  const [reducedMotion, setReducedMotion] = useState(false);
+/** A soft ember light that trails the cursor across the hero. */
+function Spotlight() {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(70);
+  const y = useMotionValue(30);
+  const sx = useSpring(x, { stiffness: 60, damping: 20 });
+  const sy = useSpring(y, { stiffness: 60, damping: 20 });
+  const background = useMotionTemplate`radial-gradient(600px circle at ${sx}% ${sy}%, rgba(229,132,79,0.13), transparent 70%)`;
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  const particles = useMemo<Particle[]>(() => {
-    return PARTICLE_KEYWORDS.map((text, i) => ({
-      id: i,
-      text,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: 0.6 + Math.random() * 0.55,
-      duration: 14 + Math.random() * 10,
-      delay: Math.random() * 5,
-    }));
-  }, []);
+    const el = ref.current?.parentElement;
+    if (!el) return;
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      x.set(((e.clientX - r.left) / r.width) * 100);
+      y.set(((e.clientY - r.top) / r.height) * 100);
+    };
+    el.addEventListener("pointermove", onMove);
+    return () => el.removeEventListener("pointermove", onMove);
+  }, [x, y]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 grid-bg" />
-      <motion.div
-        className="absolute -left-40 top-1/4 h-[500px] w-[500px] rounded-full bg-accent/30 blur-[120px]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -right-40 bottom-1/4 h-[600px] w-[600px] rounded-full bg-accent-secondary/25 blur-[130px]"
-        animate={{ scale: [1.1, 1, 1.1], opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/20 blur-[100px]"
-        animate={{ rotate: [0, 180, 360] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-
-      {!reducedMotion &&
-        particles.map((p) => (
-          <motion.span
-            key={p.id}
-            className="absolute select-none font-mono font-medium text-accent/30"
-            style={{
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              fontSize: `${p.size}rem`,
-              textShadow: "0 0 20px rgba(34, 211, 238, 0.3)",
-            }}
-            animate={{
-              y: [0, -40, 15, -25, 0],
-              x: [0, 20, -15, 8, 0],
-              opacity: [0.2, 0.5, 0.3, 0.45, 0.2],
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            {p.text}
-          </motion.span>
-        ))}
-    </div>
+    <motion.div
+      ref={ref}
+      className="pointer-events-none absolute inset-0"
+      style={{ background }}
+      aria-hidden="true"
+    />
   );
 }
+
+const fade = (delay: number) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 1, delay, ease: EASE_OUT_EXPO },
+});
 
 export function Hero() {
   return (
     <section
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 pt-24"
+      id="top"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden pt-24 md:pt-28"
       aria-label="Introduction"
     >
-      <ParticleBackground />
+      <Spotlight />
 
-      <div className="relative z-10 mx-auto max-w-5xl text-center">
-        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-          {HEADLINE_WORDS.map((word, i) => (
-            <motion.span
-              key={`${word.text}-${i}`}
-              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{
-                duration: 0.6,
-                delay: 0.2 + i * 0.1,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-              className={`inline-block ${word.highlight ? "gradient-text" : "text-foreground"}`}
+      {/* Faint vertical column guides, like a layout grid left visible. */}
+      <div
+        className="container-page pointer-events-none absolute inset-0 hidden grid-cols-12 lg:grid"
+        aria-hidden="true"
+      >
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="border-l border-line last:border-r" />
+        ))}
+      </div>
+
+      <div className="container-page relative flex flex-1 flex-col">
+        <motion.div
+          {...fade(0.3)}
+          className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b border-line pb-5"
+        >
+          <span className="label flex items-center gap-2.5">
+            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+            Open to co-founding &amp; select projects
+          </span>
+          <span className="label hidden sm:inline">{SITE.location}</span>
+          <LocalTime className="label" />
+        </motion.div>
+
+        <div className="flex flex-1 flex-col justify-center py-12 md:py-14">
+          <motion.p {...fade(0.4)} className="label mb-8 text-accent">
+            {SITE.name} — {SITE.shortTitle}
+          </motion.p>
+
+          <h1 className="font-serif text-[15vw] leading-[0.88] tracking-tightest text-foreground sm:text-[12vw] lg:text-[9.5rem] xl:text-[11rem]">
+            <RevealLine animateOnMount delay={0.45}>
+              I build products
+            </RevealLine>
+            <RevealLine animateOnMount delay={0.55}>
+              people <span className="italic text-accent">actually</span> use.
+            </RevealLine>
+          </h1>
+
+          <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-12">
+            <motion.p
+              {...fade(0.9)}
+              className="max-w-xl text-pretty text-lg leading-relaxed text-muted md:text-xl lg:col-span-6 lg:col-start-1"
             >
-              {word.text}
-              {i < HEADLINE_WORDS.length - 1 ? "\u00A0" : ""}
-            </motion.span>
+              Four years turning ideas into production software across{" "}
+              <span className="text-foreground">fintech, commerce and logistics</span>
+              {" "}— mobile and web, architecture to launch, with the ownership of
+              someone who intends to build companies, not just features.
+            </motion.p>
+
+            <motion.div
+              {...fade(1)}
+              className="flex flex-wrap items-start gap-3 lg:col-span-5 lg:col-start-8 lg:justify-end"
+            >
+              <a href="#work" className="btn-solid group">
+                View selected work
+                <span className="transition-transform duration-500 ease-out-expo group-hover:translate-y-0.5">
+                  ↓
+                </span>
+              </a>
+              <a href={`mailto:${SITE.email}`} className="btn-outline">
+                Start a conversation
+              </a>
+            </motion.div>
+          </div>
+        </div>
+
+        <motion.dl
+          {...fade(1.15)}
+          className="grid grid-cols-2 border-t border-line md:grid-cols-4"
+        >
+          {stats.map((stat, i) => (
+            <div
+              key={stat.id}
+              className={
+                "py-6 md:py-8 " +
+                (i % 2 === 1 ? "border-l border-line pl-5 md:pl-8 " : "") +
+                (i === 2 ? "md:border-l md:border-line md:pl-8 " : "") +
+                (i >= 2 ? "border-t border-line md:border-t-0" : "")
+              }
+            >
+              <dt className="label">{stat.label}</dt>
+              <dd className="mt-2 font-serif text-5xl leading-none md:text-6xl">
+                <CountUp value={stat.value} suffix={stat.suffix} />
+              </dd>
+            </div>
           ))}
-        </h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="mx-auto mt-8 max-w-2xl text-lg text-muted md:text-xl"
-        >
-          <span className="text-foreground">Senior Software Engineer</span>
-          {" · "}
-          4+ years delivering scalable mobile and web products — from architecture
-          and build to launch and iteration.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
-        >
-          <button onClick={() => scrollToSection("projects")} className="btn-primary w-full sm:w-auto">
-            <span className="relative z-10">See My Work</span>
-          </button>
-          <a href={`mailto:${SITE.email}`} className="btn-ghost w-full sm:w-auto">
-            Let&apos;s Talk
-          </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-          className="mt-16 flex justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="flex flex-col items-center gap-2 text-muted"
-          >
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-            <svg className="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </motion.div>
-        </motion.div>
+        </motion.dl>
       </div>
     </section>
   );

@@ -9,58 +9,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#030712",
-        surface: "#0a0f1e",
-        accent: "#22d3ee",
-        "accent-secondary": "#a855f7",
-        foreground: "#f8fafc",
-        muted: "#94a3b8",
-        card: "#0f172a",
+        background: "#0b0a09",
+        surface: "#131210",
+        elevated: "#1a1816",
+        foreground: "#ede9e3",
+        muted: "#8f8a82",
+        subtle: "#5c5852",
+        line: "rgba(237, 233, 227, 0.09)",
+        "line-strong": "rgba(237, 233, 227, 0.18)",
+        accent: "#e5844f",
+        "accent-soft": "#f2b48c",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
-      boxShadow: {
-        glow: "0 0 40px rgba(34, 211, 238, 0.25)",
-        "glow-lg": "0 0 60px rgba(34, 211, 238, 0.35), 0 0 100px rgba(168, 85, 247, 0.15)",
-        "glow-purple": "0 0 40px rgba(168, 85, 247, 0.3)",
-        card: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+      letterSpacing: {
+        tightest: "-0.045em",
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-shine":
-          "linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.12) 50%, transparent 75%)",
-        "gradient-main": "linear-gradient(135deg, #22d3ee 0%, #6366f1 50%, #a855f7 100%)",
+      transitionTimingFunction: {
+        "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       animation: {
-        float: "float 20s ease-in-out infinite",
-        shimmer: "shimmer 2.5s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
-        "gradient-shift": "gradient-shift 6s ease infinite",
-        "spin-slow": "spin 12s linear infinite",
-        "border-flow": "border-flow 4s linear infinite",
+        marquee: "marquee 40s linear infinite",
+        "pulse-dot": "pulse-dot 2.4s ease-out infinite",
       },
       keyframes: {
-        float: {
-          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
-          "33%": { transform: "translate(20px, -25px) scale(1.05)" },
-          "66%": { transform: "translate(-15px, 15px) scale(0.95)" },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
-        shimmer: {
-          "0%": { backgroundPosition: "200% center" },
-          "100%": { backgroundPosition: "-200% center" },
-        },
-        "pulse-glow": {
-          "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
-          "50%": { opacity: "0.8", transform: "scale(1.05)" },
-        },
-        "gradient-shift": {
-          "0%, 100%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-        },
-        "border-flow": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "100%": { backgroundPosition: "200% 50%" },
+        "pulse-dot": {
+          "0%": { boxShadow: "0 0 0 0 rgba(229, 132, 79, 0.55)" },
+          "70%": { boxShadow: "0 0 0 8px rgba(229, 132, 79, 0)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(229, 132, 79, 0)" },
         },
       },
     },

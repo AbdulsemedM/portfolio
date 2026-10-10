@@ -170,6 +170,16 @@ export const projects: Project[] = [
     links: [{ label: "Visit Site", url: "https://abbaystock.com/" }],
   },
   {
+    id: "abaycrm",
+    title: "AbayCRM",
+    company: "other",
+    companyLabel: "AbayCRM",
+    description:
+      "Bilingual (Amharic/English) CRM for Ethiopian retail and e-commerce teams — unifies online, app, showroom, and phone orders into one customer profile with sales pipelines, follow-ups, and a public REST API with webhooks.",
+    tags: ["PostgreSQL", "Multi-tenant", "REST API", "Webhooks"],
+    links: [{ label: "Visit Site", url: "https://abbaycrm.com/" }],
+  },
+  {
     id: "hudhud-delivery",
     title: "Hudhud Delivery",
     company: "hudhud",
@@ -235,5 +245,5 @@ export const projects: Project[] = [
 export const companyGroups: { id: CompanyId; label: string }[] = [
   { id: "cbo", label: "Cooperative Bank of Oromia" },
   { id: "hudhud", label: "HudHud Corporation PLC" },
-  { id: "other", label: "Other Projects" },
+  { id: "other", label: "Independent & Clients" },
 ];

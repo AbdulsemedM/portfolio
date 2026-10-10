@@ -1,96 +1,101 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { stats } from "@/data/stats";
-import { SITE } from "@/lib/constants";
-import { CountUp } from "@/components/ui/CountUp";
+import { SITE, SECTION_IDS } from "@/lib/constants";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionBackground } from "@/components/ui/SectionBackground";
-import { SECTION_IDS } from "@/lib/constants";
+
+const PRINCIPLES = [
+  {
+    title: "Ownership",
+    body: "I treat the product as mine — from the data model to the app-store listing to the 2 a.m. incident.",
+  },
+  {
+    title: "Pragmatism",
+    body: "The simplest architecture that will survive real users, real payments and real growth.",
+  },
+  {
+    title: "Craft",
+    body: "Interfaces that feel considered, code the next engineer is glad to inherit.",
+  },
+];
 
 export function About() {
   return (
     <section
       id={SECTION_IDS.about}
-      className="relative px-6 py-24 md:py-32"
+      className="relative py-24 md:py-36"
       aria-labelledby="about-heading"
     >
-      <SectionBackground variant="cyan" />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
+      <div className="container-page">
         <SectionHeading
+          id="about-heading"
+          index="01"
           eyebrow="About"
-          title="What I bring to the table"
-          highlight="bring"
-          subtitle="Senior engineering with product ownership — from first commit to production."
+          title="Engineer by trade,"
+          emphasis="founder by intent."
         />
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <FadeIn direction="left">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="relative mx-auto aspect-square max-w-sm"
-            >
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-main opacity-60 blur-lg" />
-              <div className="shiny-border relative aspect-square overflow-hidden rounded-2xl">
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
+          <FadeIn className="lg:col-span-4">
+            <figure className="group">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface">
                 <Image
                   src="/images/profile.jpg"
-                  alt={SITE.name}
-                  width={400}
-                  height={400}
-                  className="h-full w-full object-cover"
-                  priority
+                  alt={`Portrait of ${SITE.name}`}
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 100vw"
+                  className="object-cover grayscale transition-[filter,transform] duration-[1.2s] ease-out-expo group-hover:scale-[1.03] group-hover:grayscale-0"
                 />
                 <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent"
-                  aria-hidden="true"
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-shine opacity-20"
-                  style={{ backgroundSize: "200% 100%", animation: "shimmer 3s ease-in-out infinite" }}
+                  className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent"
                   aria-hidden="true"
                 />
               </div>
-            </motion.div>
+              <figcaption className="label mt-4 flex justify-between">
+                <span>Fig. 01</span>
+                <span>{SITE.location}</span>
+              </figcaption>
+            </figure>
           </FadeIn>
 
-          <FadeIn direction="right" delay={0.15}>
-            <p className="text-lg leading-relaxed text-muted md:text-xl">
-              I&apos;m a senior software engineer who helps teams turn ideas into
-              reliable, production-ready products. With 4+ years across mobile and
-              web, I bring{" "}
-              <span className="font-semibold text-foreground">end-to-end delivery</span>
-              — architecture, implementation, deployment, and iteration — with a
-              clear focus on quality, maintainability, and user impact.
-            </p>
-            <p className="mt-6 text-lg leading-relaxed text-muted md:text-xl">
-              You get a partner who communicates clearly, takes ownership of outcomes,
-              and moves with urgency without cutting corners. Whether building a new
-              product from scratch or strengthening an existing platform, I contribute
-              technical depth, sound judgment, and the discipline to ship work that
-              holds up in the real world.
-            </p>
+          <div className="lg:col-span-7 lg:col-start-6">
+            <FadeIn>
+              <p className="text-balance font-serif text-3xl leading-[1.2] text-foreground md:text-[2.6rem]">
+                I help teams turn ambitious ideas into reliable products — and
+                I&apos;m looking for the{" "}
+                <em className="text-accent">right problem</em> to build a company
+                around.
+              </p>
+            </FadeIn>
 
-            <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {stats.map((stat, i) => (
-                <FadeIn key={stat.id} delay={0.1 * i} direction="scale">
-                  <motion.div
-                    whileHover={{ y: -4, scale: 1.05 }}
-                    className="glass-card rounded-xl p-4 text-center sm:text-left"
-                  >
-                    <p className="stat-glow">
-                      <CountUp value={stat.value} suffix={stat.suffix} />
-                    </p>
-                    <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted">
-                      {stat.label}
-                    </p>
-                  </motion.div>
+            <FadeIn delay={0.1} className="mt-10 grid gap-6 text-lg leading-relaxed text-muted md:grid-cols-2">
+              <p>
+                Over four years I&apos;ve shipped banking platforms for the
+                Cooperative Bank of Oromia, consumer apps with 50K+ downloads, and
+                logistics systems that move real parcels across Addis Ababa.
+              </p>
+              <p>
+                I work end-to-end — architecture, implementation, deployment and
+                iteration — and communicate like a partner, not a ticket-taker.
+                Fast, but never at the expense of work that holds up.
+              </p>
+            </FadeIn>
+
+            <dl className="mt-14 border-t border-line">
+              {PRINCIPLES.map((p, i) => (
+                <FadeIn
+                  key={p.title}
+                  delay={0.1 + i * 0.08}
+                  className="grid gap-2 border-b border-line py-6 sm:grid-cols-12 sm:gap-6"
+                >
+                  <dt className="flex items-baseline gap-3 sm:col-span-4">
+                    <span className="font-mono text-xs text-subtle">0{i + 1}</span>
+                    <span className="font-serif text-2xl">{p.title}</span>
+                  </dt>
+                  <dd className="text-muted sm:col-span-8 sm:pt-1.5">{p.body}</dd>
                 </FadeIn>
               ))}
-            </div>
-          </FadeIn>
+            </dl>
+          </div>
         </div>
       </div>
     </section>

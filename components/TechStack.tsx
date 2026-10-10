@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import {
   SiDart, SiDocker, SiFigma, SiFirebase, SiFlutter, SiGit,
   SiGithubactions, SiGo, SiMongodb, SiNextdotjs, SiNodedotjs,
@@ -12,8 +9,7 @@ import type { IconType } from "react-icons";
 import { techStack, type TechIconId } from "@/data/tech-stack";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionBackground } from "@/components/ui/SectionBackground";
-import { GlowCard } from "@/components/ui/GlowCard";
+import { SECTION_IDS } from "@/lib/constants";
 
 function CursorIcon({ className }: { className?: string }) {
   return (
@@ -42,52 +38,53 @@ const iconMap: Record<TechIconId, IconType | typeof CursorIcon | typeof WalletIc
 
 export function TechStack() {
   return (
-    <section className="relative px-6 py-24 md:py-32" aria-labelledby="tech-heading">
-      <SectionBackground />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
+    <section
+      id={SECTION_IDS.capabilities}
+      className="relative py-24 md:py-36"
+      aria-labelledby="capabilities-heading"
+    >
+      <div className="container-page">
         <SectionHeading
-          eyebrow="Tech Stack"
-          title="Tools I ship with"
-          highlight="ship"
-          subtitle="Full-stack expertise across mobile, web, Firebase, payments, cloud, and DevOps."
+          id="capabilities-heading"
+          index="02"
+          eyebrow="Capabilities"
+          title="A full-stack toolkit,"
+          emphasis="chosen with care."
+          aside={
+            <p className="max-w-sm text-muted">
+              Mobile, web, cloud and payments — including local rails like
+              Telebirr and Chapa that most teams have never integrated.
+            </p>
+          }
         />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {techStack.map((category, catIndex) => (
-            <FadeIn key={category.id} delay={catIndex * 0.05} direction="scale">
-              <GlowCard>
-                <div className="p-6">
-                  <h3 className="mb-5 text-sm font-bold uppercase tracking-widest gradient-text-static">
-                    {category.label}
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {category.items.map((item, i) => {
-                      const Icon = iconMap[item.icon];
-                      return (
-                        <motion.div
-                          key={item.name}
-                          title={item.name}
-                          whileHover={{ scale: 1.15, y: -4 }}
-                          initial={{ opacity: 0, y: 10 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: catIndex * 0.05 + i * 0.03 }}
-                          className="group flex flex-col items-center gap-2 rounded-xl p-3 transition-colors hover:bg-accent/10"
-                        >
-                          <Icon
-                            className="h-8 w-8 text-muted transition-all duration-300 group-hover:text-accent group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]"
-                            aria-hidden="true"
-                          />
-                          <span className="text-xs font-medium text-muted group-hover:text-foreground">
-                            {item.name}
-                          </span>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </GlowCard>
+        <div className="border-t border-line">
+          {techStack.map((category, i) => (
+            <FadeIn
+              key={category.id}
+              delay={i * 0.04}
+              className="group grid items-center gap-5 border-b border-line py-7 transition-colors duration-500 hover:bg-surface/60 md:grid-cols-12 md:gap-6 md:px-4"
+            >
+              <h3 className="flex items-baseline gap-4 md:col-span-4">
+                <span className="font-mono text-xs text-subtle">0{i + 1}</span>
+                <span className="font-serif text-3xl transition-transform duration-500 ease-out-expo group-hover:translate-x-1 md:text-4xl">
+                  {category.label}
+                </span>
+              </h3>
+              <ul className="flex flex-wrap gap-x-7 gap-y-3 md:col-span-8">
+                {category.items.map((item) => {
+                  const Icon = iconMap[item.icon];
+                  return (
+                    <li
+                      key={item.name}
+                      className="flex items-center gap-2.5 text-muted transition-colors duration-300 group-hover:text-foreground"
+                    >
+                      <Icon className="h-4 w-4 opacity-70" aria-hidden="true" />
+                      <span className="text-[15px]">{item.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
             </FadeIn>
           ))}
         </div>

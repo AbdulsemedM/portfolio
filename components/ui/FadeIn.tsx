@@ -7,39 +7,64 @@ interface FadeInProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   delay?: number;
   className?: string;
-  direction?: "up" | "left" | "right" | "scale";
+  y?: number;
 }
+
+export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
 export function FadeIn({
   children,
   delay = 0,
   className,
-  direction = "up",
+  y = 24,
   ...props
 }: FadeInProps) {
-  const variants = {
-    up: { opacity: 0, y: 40, filter: "blur(8px)" },
-    left: { opacity: 0, x: -40, filter: "blur(8px)" },
-    right: { opacity: 0, x: 40, filter: "blur(8px)" },
-    scale: { opacity: 0, scale: 0.92, filter: "blur(6px)" },
-  };
-
-  const initial = variants[direction];
-
   return (
     <motion.div
-      initial={initial}
-      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        duration: 0.7,
-        delay,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.9, delay, ease: EASE_OUT_EXPO }}
       className={cn(className)}
       {...props}
     >
       {children}
     </motion.div>
+  );
+}
+
+/** Slides a line of text up from behind a mask — used for display headings. */
+export function RevealLine({
+  children,
+  delay = 0,
+  className,
+  animateOnMount = false,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  animateOnMount?: boolean;
+}) {
+  // The observer sits on the (unclipped) mask; the inner line inherits the
+  // state via variants. Observing the inner span would never fire because
+  // overflow-hidden clips it out of view.
+  const trigger = animateOnMount
+    ? { animate: "shown" }
+    : { whileInView: "shown", viewport: { once: true, margin: "-60px" } };
+
+  return (
+    <motion.span
+      className={cn("block overflow-hidden pb-[0.08em]", className)}
+      initial="hidden"
+      {...trigger}
+    >
+      <motion.span
+        className="block"
+        variants={{ hidden: { y: "110%" }, shown: { y: "0%" } }}
+        transition={{ duration: 1.1, delay, ease: EASE_OUT_EXPO }}
+      >
+        {children}
+      </motion.span>
+    </motion.span>
   );
 }

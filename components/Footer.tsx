@@ -1,49 +1,49 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ExternalLink } from "@/components/ui/ExternalLink";
+import { LocalTime } from "@/components/ui/LocalTime";
 import { SITE } from "@/lib/constants";
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-white/10 px-6 py-12">
-      <div
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"
-        aria-hidden="true"
-      />
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 md:flex-row">
-        <p className="text-sm text-muted">
-          &copy; {year}{" "}
-          <span className="font-medium text-foreground">{SITE.name}</span>
-          . Built with Next.js &amp; passion.
+    <footer className="relative overflow-hidden border-t border-line pt-14">
+      <div className="container-page grid gap-8 text-sm text-muted md:grid-cols-12">
+        <p className="md:col-span-4">
+          &copy; {year} {SITE.name}
+          <br />
+          <span className="text-subtle">Designed &amp; built in Addis Ababa.</span>
         </p>
-
-        <div className="flex items-center gap-6">
-          <ExternalLink
-            href={SITE.github}
-            className="text-sm text-muted transition-all hover:text-accent hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
-            aria-label="GitHub profile"
-          >
-            GitHub
-          </ExternalLink>
-          <ExternalLink
-            href={SITE.linkedin}
-            className="text-sm text-muted transition-all hover:text-accent hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
-            aria-label="LinkedIn profile"
-          >
-            LinkedIn
-          </ExternalLink>
-          <motion.button
-            whileHover={{ y: -2 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-sm text-muted transition-colors hover:text-accent"
-          >
-            Back to top ↑
-          </motion.button>
-        </div>
+        <p className="md:col-span-3">
+          <span className="label block">Local time</span>
+          <LocalTime className="mt-1 block text-foreground" />
+        </p>
+        <ul className="flex gap-6 md:col-span-5 md:justify-end">
+          <li>
+            <ExternalLink href={SITE.github} className="link-underline hover:text-foreground">
+              GitHub
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={SITE.linkedin} className="link-underline hover:text-foreground">
+              LinkedIn
+            </ExternalLink>
+          </li>
+          <li>
+            <a href="#top" className="link-underline hover:text-foreground">
+              Back to top ↑
+            </a>
+          </li>
+        </ul>
       </div>
+
+      {/* Oversized wordmark that bleeds off the bottom edge. */}
+      <p
+        className="pointer-events-none mt-10 select-none whitespace-nowrap text-center font-serif text-[22vw] leading-[0.75] tracking-tightest text-transparent"
+        style={{ WebkitTextStroke: "1px rgba(237, 233, 227, 0.2)" }}
+        aria-hidden="true"
+      >
+        {SITE.firstName}
+      </p>
     </footer>
   );
 }

@@ -1,73 +1,52 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { cn } from "@/lib/cn";
+import { FadeIn, RevealLine } from "@/components/ui/FadeIn";
 
 interface SectionHeadingProps {
+  index: string;
   eyebrow: string;
+  /** Plain part of the title. */
   title: string;
-  subtitle?: string;
+  /** Rendered in italic serif after the title. */
+  emphasis?: string;
+  id?: string;
+  aside?: React.ReactNode;
   className?: string;
-  align?: "left" | "center";
-  highlight?: string;
 }
 
 export function SectionHeading({
+  index,
   eyebrow,
   title,
-  subtitle,
+  emphasis,
+  id,
+  aside,
   className,
-  align = "left",
-  highlight,
 }: SectionHeadingProps) {
-  const titleParts = highlight ? title.split(highlight) : [title];
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-      className={cn(
-        "mb-12 md:mb-16",
-        align === "center" && "text-center",
-        className
-      )}
-    >
-      <motion.span
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className="eyebrow-badge"
-      >
-        {eyebrow}
-      </motion.span>
-      <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
-        {highlight && titleParts.length > 1 ? (
-          <>
-            {titleParts[0]}
-            <span className="gradient-text">{highlight}</span>
-            {titleParts[1]}
-          </>
-        ) : (
-          <span className="gradient-text-static">{title}</span>
-        )}
-      </h2>
-      {subtitle && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className={cn(
-            "mt-4 max-w-2xl text-lg text-muted md:text-xl",
-            align === "center" && "mx-auto"
-          )}
+    <div className={cn("mb-14 md:mb-20", className)}>
+      <FadeIn className="mb-8 flex items-center gap-4 border-t border-line pt-5">
+        <span className="label text-accent">{index}</span>
+        <span className="label">{eyebrow}</span>
+      </FadeIn>
+
+      <div className="grid items-end gap-8 lg:grid-cols-12">
+        <h2
+          id={id}
+          className="font-serif text-5xl leading-[0.95] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:col-span-8"
         >
-          {subtitle}
-        </motion.p>
-      )}
-    </motion.div>
+          <RevealLine>{title}</RevealLine>
+          {emphasis && (
+            <RevealLine delay={0.08} className="italic text-muted">
+              {emphasis}
+            </RevealLine>
+          )}
+        </h2>
+        {aside && (
+          <FadeIn delay={0.2} className="lg:col-span-4 lg:pb-3">
+            {aside}
+          </FadeIn>
+        )}
+      </div>
+    </div>
   );
 }

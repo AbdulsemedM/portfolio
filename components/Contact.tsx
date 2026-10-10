@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { motion } from "framer-motion";
-import { FadeIn } from "@/components/ui/FadeIn";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionBackground } from "@/components/ui/SectionBackground";
-import { GlowCard } from "@/components/ui/GlowCard";
+import { FadeIn, RevealLine } from "@/components/ui/FadeIn";
 import { ExternalLink } from "@/components/ui/ExternalLink";
+import { ArrowIcon } from "@/components/ui/ArrowIcon";
 import { SITE, SECTION_IDS } from "@/lib/constants";
 
 interface FormData {
@@ -17,9 +14,15 @@ interface FormData {
 
 const initialForm: FormData = { name: "", email: "", message: "" };
 
+const CHANNELS = [
+  { label: "LinkedIn", href: SITE.linkedin },
+  { label: "GitHub", href: SITE.github },
+];
+
 export function Contact() {
   const [form, setForm] = useState<FormData>(initialForm);
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -43,104 +46,150 @@ export function Contact() {
     window.location.href = `mailto:${SITE.email}?subject=${subject}&body=${body}`;
   };
 
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(SITE.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${SITE.email}`;
+    }
+  };
+
   return (
     <section
       id={SECTION_IDS.contact}
-      className="relative px-6 py-24 md:py-32"
+      className="relative overflow-hidden py-24 md:py-36"
       aria-labelledby="contact-heading"
     >
-      <SectionBackground variant="cyan" />
+      <div
+        className="pointer-events-none absolute -bottom-1/2 left-1/2 h-[800px] w-[1200px] -translate-x-1/2 rounded-full bg-accent/[0.07] blur-[140px]"
+        aria-hidden="true"
+      />
 
-      <div className="relative z-10 mx-auto max-w-4xl">
-        <SectionHeading
-          eyebrow="Contact"
-          title="Let's build something together."
-          highlight="together"
-          subtitle="I'm exploring co-founding opportunities in tech. If you're an investor or entrepreneur with a big idea, let's talk."
-          align="center"
-        />
-
-        <FadeIn delay={0.1}>
-          <div className="mb-10 flex flex-wrap items-center justify-center gap-4">
-            <motion.a
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34,211,238,0.4)" }}
-              href={`mailto:${SITE.email}`}
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Email Me
-              </span>
-            </motion.a>
-            <ExternalLink href={SITE.linkedin} className="btn-ghost">
-              LinkedIn
-            </ExternalLink>
-            <ExternalLink href={SITE.github} className="btn-ghost">
-              GitHub
-            </ExternalLink>
-          </div>
+      <div className="container-page relative">
+        <FadeIn className="mb-8 flex items-center gap-4 border-t border-line pt-5">
+          <span className="label text-accent">05</span>
+          <span className="label">Contact</span>
         </FadeIn>
 
-        <FadeIn delay={0.2}>
-          <GlowCard>
-            <form onSubmit={handleSubmit} className="p-8" noValidate>
-              <div className="grid gap-6 md:grid-cols-2">
+        <h2
+          id="contact-heading"
+          className="font-serif text-[13vw] leading-[0.9] tracking-tightest sm:text-[10vw] lg:text-[8.5rem]"
+        >
+          <RevealLine>Have an idea</RevealLine>
+          <RevealLine delay={0.08}>
+            worth <span className="italic text-accent">building?</span>
+          </RevealLine>
+        </h2>
+
+        <FadeIn delay={0.15} className="mt-10 max-w-2xl text-lg leading-relaxed text-muted md:text-xl">
+          I&apos;m exploring co-founding opportunities and a few select engagements.
+          Investors, founders and teams with a hard problem — I&apos;d love to hear from you.
+        </FadeIn>
+
+        <div className="mt-16 grid gap-16 lg:grid-cols-12 lg:gap-8">
+          <FadeIn delay={0.2} className="lg:col-span-5">
+            <p className="label mb-4">Write directly</p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a
+                href={`mailto:${SITE.email}`}
+                className="link-underline break-all font-serif text-3xl text-foreground transition-colors hover:text-accent md:text-4xl"
+              >
+                {SITE.email}
+              </a>
+              <button
+                onClick={copyEmail}
+                className="label rounded-full border border-line-strong px-3 py-1.5 transition-colors hover:border-foreground hover:text-foreground"
+                aria-live="polite"
+              >
+                {copied ? "Copied ✓" : "Copy"}
+              </button>
+            </div>
+
+            <ul className="mt-12 border-t border-line">
+              {CHANNELS.map((c) => (
+                <li key={c.label} className="border-b border-line">
+                  <ExternalLink
+                    href={c.href}
+                    className="group flex items-center justify-between py-4 text-lg transition-colors hover:text-accent"
+                  >
+                    {c.label}
+                    <ArrowIcon className="h-4 w-4 transition-transform duration-500 ease-out-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </ExternalLink>
+                </li>
+              ))}
+              <li className="border-b border-line">
+                <a
+                  href={SITE.resumePath}
+                  download
+                  className="group flex items-center justify-between py-4 text-lg transition-colors hover:text-accent"
+                >
+                  Résumé (PDF)
+                  <span className="transition-transform duration-500 ease-out-expo group-hover:translate-y-0.5">↓</span>
+                </a>
+              </li>
+            </ul>
+          </FadeIn>
+
+          <FadeIn delay={0.3} className="lg:col-span-6 lg:col-start-7">
+            <form onSubmit={handleSubmit} noValidate className="rounded-sm border border-line bg-surface/60 p-6 backdrop-blur-sm md:p-10">
+              <p className="label mb-8">Or leave a note</p>
+              <div className="grid gap-8 md:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-muted">Name</label>
+                  <label htmlFor="name" className="label">Name</label>
                   <input
                     id="name"
                     type="text"
+                    autoComplete="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-background/80 px-4 py-3 text-foreground backdrop-blur-sm transition-all placeholder:text-muted/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-                    placeholder="Your name"
+                    className="field"
+                    placeholder="Jane Doe"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-muted">Email</label>
+                  <label htmlFor="email" className="label">Email</label>
                   <input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-background/80 px-4 py-3 text-foreground backdrop-blur-sm transition-all placeholder:text-muted/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-                    placeholder="you@example.com"
+                    className="field"
+                    placeholder="jane@company.com"
                     required
                   />
                 </div>
               </div>
 
-              <div className="mt-6">
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-muted">Message</label>
+              <div className="mt-8">
+                <label htmlFor="message" className="label">Message</label>
                 <textarea
                   id="message"
-                  rows={5}
+                  rows={4}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-background/80 px-4 py-3 text-foreground backdrop-blur-sm transition-all placeholder:text-muted/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-                  placeholder="Tell me about your idea..."
+                  className="field resize-none"
+                  placeholder="Tell me about the problem you're solving…"
                   required
                 />
               </div>
 
               {error && (
-                <p className="mt-4 text-sm text-red-400" role="alert">{error}</p>
+                <p className="mt-5 text-sm text-accent-soft" role="alert">
+                  {error}
+                </p>
               )}
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="btn-primary mt-6 w-full md:w-auto"
-              >
-                <span className="relative z-10">Send Message</span>
-              </motion.button>
+              <button type="submit" className="btn-solid group mt-10 w-full sm:w-auto">
+                Send message
+                <ArrowIcon className="transition-transform duration-500 ease-out-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </button>
             </form>
-          </GlowCard>
-        </FadeIn>
+          </FadeIn>
+        </div>
       </div>
     </section>
   );

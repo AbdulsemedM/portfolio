@@ -1,106 +1,147 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { projects, companyGroups } from "@/data/projects";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { projects, companyGroups, type CompanyId } from "@/data/projects";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionBackground } from "@/components/ui/SectionBackground";
-import { GlowCard } from "@/components/ui/GlowCard";
-import { TechPill } from "@/components/ui/TechPill";
 import { ExternalLink } from "@/components/ui/ExternalLink";
+import { ArrowIcon } from "@/components/ui/ArrowIcon";
+import { EASE_OUT_EXPO } from "@/components/ui/FadeIn";
 import { SECTION_IDS } from "@/lib/constants";
+import { cn } from "@/lib/cn";
 
-function ExternalLinkIcon() {
-  return (
-    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-    </svg>
-  );
-}
+type Filter = CompanyId | "all";
+
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "all", label: "All work" },
+  ...companyGroups,
+];
 
 export function Projects() {
+  const [filter, setFilter] = useState<Filter>("all");
+  const visible = filter === "all" ? projects : projects.filter((p) => p.company === filter);
+
   return (
     <section
       id={SECTION_IDS.projects}
-      className="relative px-6 py-24 md:py-32"
-      aria-labelledby="projects-heading"
+      className="relative py-24 md:py-36"
+      aria-labelledby="work-heading"
     >
-      <SectionBackground variant="purple" />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
+      <div className="container-page">
         <SectionHeading
-          eyebrow="Projects"
-          title="Products I've shipped"
-          highlight="shipped"
-          subtitle="Real apps in production — fintech, e-commerce, and logistics."
+          id="work-heading"
+          index="03"
+          eyebrow="Selected work"
+          title="Products in production,"
+          emphasis="not on a whiteboard."
+          aside={
+            <p className="max-w-sm text-muted">
+              {projects.length} shipped products across banking, commerce and
+              logistics — most of them live in app stores today.
+            </p>
+          }
         />
 
-        <div className="space-y-16">
-          {companyGroups.map((group, groupIndex) => {
-            const groupProjects = projects.filter((p) => p.company === group.id);
-
+        <div
+          className="mb-10 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none]"
+          role="tablist"
+          aria-label="Filter projects by company"
+        >
+          {FILTERS.map((f) => {
+            const count = f.id === "all" ? projects.length : projects.filter((p) => p.company === f.id).length;
+            const selected = filter === f.id;
             return (
-              <div key={group.id}>
-                <FadeIn delay={groupIndex * 0.1}>
-                  <h3 className="mb-8 flex items-center gap-3 text-xl font-semibold">
-                    <span className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
-                    <motion.span
-                      whileHover={{ scale: 1.05 }}
-                      className="shiny-border shrink-0 rounded-full px-5 py-2 text-sm font-medium text-accent shadow-glow"
-                    >
-                      {group.label}
-                    </motion.span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-transparent via-accent-secondary/40 to-transparent" />
-                  </h3>
-                </FadeIn>
-
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {groupProjects.map((project, i) => (
-                    <FadeIn key={project.id} delay={i * 0.06} direction="scale">
-                      <GlowCard>
-                        <article className="group flex h-full flex-col p-6">
-                          <span className="mb-4 inline-flex w-fit rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-muted">
-                            {project.companyLabel}
-                          </span>
-
-                          <h4 className="text-lg font-semibold text-foreground transition-colors group-hover:gradient-text-static">
-                            {project.title}
-                          </h4>
-
-                          <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
-                            {project.description}
-                          </p>
-
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                              <TechPill key={tag} label={tag} />
-                            ))}
-                          </div>
-
-                          {project.links.length > 0 && (
-                            <div className="mt-6 flex flex-wrap gap-3 border-t border-white/10 pt-4">
-                              {project.links.map((link) => (
-                                <ExternalLink
-                                  key={link.url}
-                                  href={link.url}
-                                  aria-label={`${project.title} - ${link.label}`}
-                                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-accent transition-all hover:bg-accent/10 hover:shadow-[0_0_16px_rgba(34,211,238,0.2)]"
-                                >
-                                  {link.label}
-                                  <ExternalLinkIcon />
-                                </ExternalLink>
-                              ))}
-                            </div>
-                          )}
-                        </article>
-                      </GlowCard>
-                    </FadeIn>
-                  ))}
-                </div>
-              </div>
+              <button
+                key={f.id}
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setFilter(f.id)}
+                className={cn(
+                  "relative shrink-0 rounded-full border px-4 py-2 text-sm transition-colors duration-300",
+                  selected
+                    ? "border-foreground text-background"
+                    : "border-line-strong text-muted hover:border-foreground/50 hover:text-foreground"
+                )}
+              >
+                {selected && (
+                  <motion.span
+                    layoutId="filter-pill"
+                    className="absolute inset-0 rounded-full bg-foreground"
+                    transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+                  />
+                )}
+                <span className="relative">
+                  {f.label}
+                  <sup className="ml-1 font-mono text-[10px]">{count}</sup>
+                </span>
+              </button>
             );
           })}
         </div>
+
+        <ol className="border-t border-line">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((project, i) => (
+              <motion.li
+                key={project.id}
+                layout
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                transition={{ duration: 0.6, delay: i * 0.03, ease: EASE_OUT_EXPO }}
+                className="group relative border-b border-line"
+              >
+                {/* Ember wash that sweeps in from the left on hover. */}
+                <span
+                  className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-accent/[0.07] to-transparent transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
+                  aria-hidden="true"
+                />
+
+                <article className="relative grid gap-4 py-8 md:grid-cols-12 md:gap-6 md:px-4 md:py-10">
+                  <span className="font-mono text-xs text-subtle md:col-span-1 md:pt-3">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+
+                  <div className="md:col-span-6">
+                    <h3 className="font-serif text-4xl leading-none tracking-tight transition-transform duration-700 ease-out-expo group-hover:translate-x-2 md:text-5xl">
+                      {project.title}
+                    </h3>
+                    <p className="mt-4 max-w-xl text-pretty leading-relaxed text-muted">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-4 md:col-span-5 md:items-end md:pt-2 md:text-right">
+                    <span className="label">{project.companyLabel}</span>
+                    <ul className="flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted md:justify-end">
+                      {project.tags.map((tag, t) => (
+                        <li key={tag}>
+                          {tag}
+                          {t < project.tags.length - 1 && <span className="ml-3 text-subtle">/</span>}
+                        </li>
+                      ))}
+                    </ul>
+                    {project.links.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-2 md:justify-end">
+                        {project.links.map((link) => (
+                          <ExternalLink
+                            key={link.url}
+                            href={link.url}
+                            aria-label={`${project.title} — ${link.label}`}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-3.5 py-1.5 text-xs text-foreground transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-background"
+                          >
+                            {link.label}
+                            <ArrowIcon className="h-3 w-3" />
+                          </ExternalLink>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </ol>
       </div>
     </section>
   );
