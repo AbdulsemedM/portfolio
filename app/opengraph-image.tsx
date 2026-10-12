@@ -48,7 +48,7 @@ export default function OgImage() {
             lineHeight: 1.4,
           }}
         >
-          {SITE.shortTitle} · {SITE.tagline}
+          {`${SITE.shortTitle} · ${SITE.tagline}`}
         </div>
       </div>
     ),

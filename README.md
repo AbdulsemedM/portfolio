@@ -18,7 +18,15 @@ npm run build
 npm start
 ```
 
-Deploy to [Vercel](https://vercel.com) by connecting this repository. No extra configuration required.
+Deploy to [Vercel](https://vercel.com) by connecting this repository.
+
+### Environment variables (all optional)
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Public URL used for canonical, Open Graph, sitemap and robots. Defaults to `https://abdulsemedm.vercel.app`. Set this when moving to a custom domain. |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics 4 measurement ID (`G-XXXXXXX`). Analytics loads only when set. |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Google Search Console verification token. |
 
 ## Project Structure
 
@@ -31,6 +39,5 @@ Deploy to [Vercel](https://vercel.com) by connecting this repository. No extra c
 
 ## Customization
 
-- Replace the profile placeholder in `components/About.tsx` with `/public/images/profile.jpg`
 - Update project data in `data/projects.ts`
 - Update contact info in `lib/constants.ts`

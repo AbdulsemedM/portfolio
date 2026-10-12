@@ -1,4 +1,5 @@
 export const SITE = {
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://abdulsemedm.vercel.app").replace(/\/$/, ""),
   name: "Abdulsemed Mussema",
   firstName: "Abdulsemed",
   title: "Senior Software Engineer & Co-founder",
@@ -17,6 +18,18 @@ export const SEO = {
   title: "Abdulsemed Mussema — Senior Software Engineer & Co-founder",
   description:
     "Portfolio of Abdulsemed Mussema, Senior Software Engineer specializing in Flutter, React, Firebase, payment integrations, and cloud-native apps.",
+  keywords: [
+    "Abdulsemed Mussema",
+    "Senior Software Engineer",
+    "Flutter developer",
+    "React developer",
+    "Next.js developer",
+    "Full-stack developer Ethiopia",
+    "Software engineer Addis Ababa",
+    "Fintech engineer",
+    "Payment integration Telebirr Chapa",
+    "Mobile app developer",
+  ],
 } as const;
 
 export const SECTION_IDS = {
